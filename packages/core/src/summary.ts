@@ -91,9 +91,10 @@ export function summarize(values: readonly CellValue[], fn: SummaryFn): number {
       return numbers.length === 0 ? 0 : Math.min(...numbers);
     case 'max':
       return numbers.length === 0 ? 0 : Math.max(...numbers);
-    /* v8 ignore next 2 -- exhaustive switch; SummaryFn has no other members */
+    /* v8 ignore start -- exhaustive switch; SummaryFn has no other members */
     default:
       return 0;
+    /* v8 ignore stop */
   }
 }
 

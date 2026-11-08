@@ -1,14 +1,35 @@
 import { defineConfig } from 'vitest/config';
 
+// DOM-dependent packages run under happy-dom; everything else under node.
+// (Vitest 4 removed `environmentMatchGlobs`, so the split is expressed as projects.)
+const domPackages = ['packages/react', 'packages/io'];
+const testFiles = (root: string): string[] => [
+  `${root}/src/**/*.test.ts`,
+  `${root}/src/**/*.test.tsx`,
+];
+
 export default defineConfig({
   test: {
-    environment: 'node',
-    include: ['packages/*/src/**/*.test.ts', 'packages/*/src/**/*.test.tsx'],
-    setupFiles: ['./vitest.setup.ts'],
-    environmentMatchGlobs: [
-      ['packages/react/**', 'happy-dom'],
-      ['packages/io/**', 'happy-dom'],
+    projects: [
+      {
+        extends: true,
+        test: {
+          name: 'node',
+          environment: 'node',
+          include: testFiles('packages/*'),
+          exclude: domPackages.flatMap(testFiles),
+        },
+      },
+      {
+        extends: true,
+        test: {
+          name: 'happy-dom',
+          environment: 'happy-dom',
+          include: domPackages.flatMap(testFiles),
+        },
+      },
     ],
+    setupFiles: ['./vitest.setup.ts'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html', 'lcov'],

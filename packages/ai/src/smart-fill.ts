@@ -71,15 +71,17 @@ function inferPrefix(examples: readonly FillExample[]): FillRule | null {
   // A non-empty example set with an empty prefix is just identity; the
   // identity rule (tried earlier) already owns that case, so by the time we get
   // here `text` is a non-empty string. The guard below is defensive.
-  /* v8 ignore next 3 -- empty/null prefix is owned by identity, unreachable here */
+  /* v8 ignore start -- empty/null prefix is owned by identity, unreachable here */
   if (text === null || text === '') {
     return null;
   }
+  /* v8 ignore stop */
   const rule: FillRule = { kind: 'prefix', text };
   // A consistent prefix necessarily reproduces every example, so fitsAll is
   // always true here; the re-check is a belt-and-braces guard.
-  /* v8 ignore next -- fitsAll is always true for a consistent prefix */
+  /* v8 ignore start -- fitsAll is always true for a consistent prefix */
   return fitsAll(rule, examples) ? rule : null;
+  /* v8 ignore stop */
 }
 
 /**
@@ -100,14 +102,16 @@ function inferSuffix(examples: readonly FillExample[]): FillRule | null {
     }
   }
   // As with prefixes, an empty suffix means identity, already handled earlier.
-  /* v8 ignore next 3 -- empty/null suffix is owned by identity, unreachable here */
+  /* v8 ignore start -- empty/null suffix is owned by identity, unreachable here */
   if (text === null || text === '') {
     return null;
   }
+  /* v8 ignore stop */
   const rule: FillRule = { kind: 'suffix', text };
   // A consistent suffix necessarily reproduces every example.
-  /* v8 ignore next -- fitsAll is always true for a consistent suffix */
+  /* v8 ignore start -- fitsAll is always true for a consistent suffix */
   return fitsAll(rule, examples) ? rule : null;
+  /* v8 ignore stop */
 }
 
 /**
@@ -120,10 +124,11 @@ function inferSplitField(examples: readonly FillExample[]): FillRule | null {
     // Only consider separators that actually appear in the first input, so we
     // don't manufacture a degenerate single-part split.
     const first = examples[0];
-    /* v8 ignore next 3 -- inferRule guards against an empty example set */
+    /* v8 ignore start -- inferRule guards against an empty example set */
     if (first === undefined) {
       continue;
     }
+    /* v8 ignore stop */
     const parts = first.input.split(sep);
     if (parts.length < 2) {
       continue;

@@ -24,11 +24,12 @@ export function paintChart(
 ): void {
   const dpr = options.dpr ?? 1;
   ctx.save();
-  /* v8 ignore next 4 -- DPR scaling is environment glue, exercised via paintScene */
+  /* v8 ignore start -- DPR scaling is environment glue, exercised via paintScene */
   const scalable = ctx as Canvas2D & { scale?: (x: number, y: number) => void };
   if (dpr !== 1 && typeof scalable.scale === 'function') {
     scalable.scale(dpr, dpr);
   }
+  /* v8 ignore stop */
 
   ctx.fillStyle = theme.background;
   ctx.clearRect(0, 0, options.width, options.height);
@@ -123,9 +124,10 @@ function paintLegend(ctx: Canvas2D, layout: ChartLayout, theme: GridTheme, width
     ctx.fillStyle = theme.headerTextColor;
     ctx.fillText(item.label, x + swatch + 3, y);
     x += swatch + 3 + item.label.length * 7 + 10;
-    /* v8 ignore next 3 -- defensive wrap guard for very wide legends */
+    /* v8 ignore start -- defensive wrap guard for very wide legends */
     if (x > width) {
       x = layout.plot.x;
     }
+    /* v8 ignore stop */
   }
 }

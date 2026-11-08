@@ -76,10 +76,11 @@ function collectNumbers(args: readonly AstNode[], evaluate: Evaluate): number[] 
 }
 
 function argNumber(node: AstNode | undefined, evaluate: Evaluate): number | FormulaError {
-  /* v8 ignore next 3 -- callers guard arity before reading required numeric args */
+  /* v8 ignore start -- callers guard arity before reading required numeric args */
   if (node === undefined) {
     return VALUE;
   }
+  /* v8 ignore stop */
   return toNumber(scalarize(evaluate(node)));
 }
 
@@ -641,9 +642,10 @@ function makeCriterion(criterion: CellScalar): (value: CellScalar) => boolean {
         return n <= rhsNum;
       case '>=':
         return n >= rhsNum;
-      /* v8 ignore next 2 -- op is constrained to the comparison set above */
+      /* v8 ignore start -- op is constrained to the comparison set above */
       default:
         return false;
+      /* v8 ignore stop */
     }
   };
 }
