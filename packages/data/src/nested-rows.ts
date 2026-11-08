@@ -116,10 +116,11 @@ export class NestedRowModel {
   /** Add every descendant of `row` (not `row` itself) to `out`. */
   private collectDescendants(row: number, out: Set<number>): void {
     const children = this.childrenOf.get(row);
-    /* v8 ignore next 3 -- defensive: every tree row has a children entry (leaves map to []), so this is never reached */
+    /* v8 ignore start -- defensive: every tree row has a children entry (leaves map to []), so this is never reached */
     if (children === undefined) {
       return;
     }
+    /* v8 ignore stop */
     for (const child of children) {
       out.add(child);
       this.collectDescendants(child, out);

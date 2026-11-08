@@ -26,17 +26,20 @@ export function LatticaChart(props: LatticaChartProps): ReactElement {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    /* v8 ignore next 3 -- canvas ref is always attached after mount */
+    /* v8 ignore start -- canvas ref is always attached after mount */
     if (canvas === null) {
       return;
     }
+    /* v8 ignore stop */
     const ctx = canvas.getContext('2d') as Canvas2D | null;
-    /* v8 ignore next 3 -- a 2D context is always available in supported envs */
+    /* v8 ignore start -- a 2D context is always available in supported envs */
     if (ctx === null) {
       return;
     }
-    /* v8 ignore next -- device pixel ratio is environment-dependent glue */
+    /* v8 ignore stop */
+    /* v8 ignore start -- device pixel ratio is environment-dependent glue */
     const dpr = (typeof window !== 'undefined' && window.devicePixelRatio) || 1;
+    /* v8 ignore stop */
     canvas.width = Math.round(width * dpr);
     canvas.height = Math.round(height * dpr);
     canvas.style.width = `${width}px`;

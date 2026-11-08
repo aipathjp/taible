@@ -170,9 +170,10 @@ function evalBinary(op: string, leftNode: AstNode, rightNode: AstNode, ctx: Eval
       const result = Math.pow(a, b);
       return Number.isFinite(result) ? result : NUM;
     }
-    /* v8 ignore next 2 -- op is constrained to the arithmetic set by the parser */
+    /* v8 ignore start -- op is constrained to the arithmetic set by the parser */
     default:
       return VALUE;
+    /* v8 ignore stop */
   }
 }
 

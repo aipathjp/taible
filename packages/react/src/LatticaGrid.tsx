@@ -515,10 +515,11 @@ const LatticaGridImpl = forwardRef<LatticaGridHandle, LatticaGridProps>(function
   // Measure the container when filling, so the canvas matches its parent.
   useEffect(() => {
     const el = rootRef.current;
-    /* v8 ignore next 3 -- ResizeObserver is present in browsers; absent only in some envs */
+    /* v8 ignore start -- ResizeObserver is present in browsers; absent only in some envs */
     if (autoSize === 'content' || !fill || el === null || typeof ResizeObserver === 'undefined') {
       return;
     }
+    /* v8 ignore stop */
     const ro = new ResizeObserver((entries) => {
       const cr = entries[0]?.contentRect;
       if (cr !== undefined) {
@@ -601,10 +602,11 @@ const LatticaGridImpl = forwardRef<LatticaGridHandle, LatticaGridProps>(function
     }
     const onDocMouseDown = (ev: MouseEvent): void => {
       const root = rootRef.current;
-      /* v8 ignore next 3 -- the listener's lifetime matches the mounted root */
+      /* v8 ignore start -- the listener's lifetime matches the mounted root */
       if (root === null) {
         return;
       }
+      /* v8 ignore stop */
       if (!root.contains(ev.target as Node | null)) {
         setDeselected(true);
       }
@@ -756,10 +758,11 @@ const LatticaGridImpl = forwardRef<LatticaGridHandle, LatticaGridProps>(function
     () => ({
       getCellClientRect(row, col) {
         const root = rootRef.current;
-        /* v8 ignore next 3 -- the imperative handle is only observable after the root ref is attached */
+        /* v8 ignore start -- the imperative handle is only observable after the root ref is attached */
         if (root === null) {
           return null;
         }
+        /* v8 ignore stop */
         const rect = getVisibleCellRect(row, col);
         if (rect === null) {
           return null;
@@ -769,10 +772,11 @@ const LatticaGridImpl = forwardRef<LatticaGridHandle, LatticaGridProps>(function
       },
       getRowClientRect(row) {
         const root = rootRef.current;
-        /* v8 ignore next 3 -- the imperative handle is only observable after the root ref is attached */
+        /* v8 ignore start -- the imperative handle is only observable after the root ref is attached */
         if (root === null) {
           return null;
         }
+        /* v8 ignore stop */
         if (row < 0 || row >= controller.getRowCount()) {
           return null;
         }
@@ -786,10 +790,11 @@ const LatticaGridImpl = forwardRef<LatticaGridHandle, LatticaGridProps>(function
       },
       getRowClientRects() {
         const root = rootRef.current;
-        /* v8 ignore next 3 -- the imperative handle is only observable after the root ref is attached */
+        /* v8 ignore start -- the imperative handle is only observable after the root ref is attached */
         if (root === null) {
           return [];
         }
+        /* v8 ignore stop */
         const rootRect = root.getBoundingClientRect();
         return visibleRowStrips(geom, scroll.top, height).map((strip) => ({
           row: strip.row,
@@ -815,22 +820,25 @@ const LatticaGridImpl = forwardRef<LatticaGridHandle, LatticaGridProps>(function
   // Paint on every render (cheap: only visible cells).
   useEffect(() => {
     const canvas = canvasRef.current;
-    /* v8 ignore next 3 -- canvas ref is always attached after mount */
+    /* v8 ignore start -- canvas ref is always attached after mount */
     if (canvas === null) {
       return;
     }
+    /* v8 ignore stop */
     const ctx = canvas.getContext('2d') as Canvas2D | null;
-    /* v8 ignore next 3 -- a 2D context is always available in supported envs */
+    /* v8 ignore start -- a 2D context is always available in supported envs */
     if (ctx === null) {
       return;
     }
+    /* v8 ignore stop */
     // One canvas-backed measurer per paint, shared by text wrapping and the
     // hover truncation probe (see `clippedCellText`) so both use exactly the
     // metrics the text is painted with.
     const measure = canvasMeasurer(ctx);
     measureRef.current = measure;
-    /* v8 ignore next -- device pixel ratio is environment-dependent glue */
+    /* v8 ignore start -- device pixel ratio is environment-dependent glue */
     const dpr = (typeof window !== 'undefined' && window.devicePixelRatio) || 1;
+    /* v8 ignore stop */
     canvas.width = Math.round(width * dpr);
     canvas.height = Math.round(height * dpr);
     canvas.style.width = `${width}px`;
@@ -948,10 +956,11 @@ const LatticaGridImpl = forwardRef<LatticaGridHandle, LatticaGridProps>(function
   const clippedHeaderLabel = useCallback(
     (header: PositionedHeader): string | null => {
       const measure = measureRef.current;
-      /* v8 ignore next 3 -- header hover is only reachable after the first paint set the measurer */
+      /* v8 ignore start -- header hover is only reachable after the first paint set the measurer */
       if (measure === undefined) {
         return null;
       }
+      /* v8 ignore stop */
       const font = `${theme.fontSize}px ${theme.fontFamily}`;
       const leaf = header.col !== undefined;
       const chromeWidth = headerChromeWidth({
@@ -1183,10 +1192,11 @@ const LatticaGridImpl = forwardRef<LatticaGridHandle, LatticaGridProps>(function
   const onMouseDown = useCallback(
     (e: ReactMouseEvent<HTMLDivElement>) => {
       const root = rootRef.current;
-      /* v8 ignore next 3 -- root ref is always attached when handlers fire */
+      /* v8 ignore start -- root ref is always attached when handlers fire */
       if (root === null) {
         return;
       }
+      /* v8 ignore stop */
       // A custom editor that opted in commits its draft on any mouse-down
       // outside its container (inside clicks stop propagation and never reach
       // this handler). Without the option, the factory owns the lifecycle.
@@ -1262,10 +1272,11 @@ const LatticaGridImpl = forwardRef<LatticaGridHandle, LatticaGridProps>(function
   const onMouseMove = useCallback(
     (e: ReactMouseEvent<HTMLDivElement>) => {
       const root = rootRef.current;
-      /* v8 ignore next 3 -- root ref is always attached during a drag */
+      /* v8 ignore start -- root ref is always attached during a drag */
       if (root === null) {
         return;
       }
+      /* v8 ignore stop */
       const rect = root.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
@@ -1442,10 +1453,11 @@ const LatticaGridImpl = forwardRef<LatticaGridHandle, LatticaGridProps>(function
       }
       e.preventDefault();
       const root = rootRef.current;
-      /* v8 ignore next 3 -- root ref is always attached when handlers fire */
+      /* v8 ignore start -- root ref is always attached when handlers fire */
       if (root === null) {
         return;
       }
+      /* v8 ignore stop */
       const rect = root.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
@@ -1483,10 +1495,11 @@ const LatticaGridImpl = forwardRef<LatticaGridHandle, LatticaGridProps>(function
         return;
       }
       const root = rootRef.current;
-      /* v8 ignore next 3 -- root ref is always attached when handlers fire */
+      /* v8 ignore start -- root ref is always attached when handlers fire */
       if (root === null) {
         return;
       }
+      /* v8 ignore stop */
       // Ignore double-clicks past the last column/row (the mousedown was ignored
       // there too, so editing would target an unrelated cell).
       const rect = root.getBoundingClientRect();
@@ -1612,10 +1625,11 @@ const LatticaGridImpl = forwardRef<LatticaGridHandle, LatticaGridProps>(function
       return;
     }
     const container = customContainerRef.current;
-    /* v8 ignore next 3 -- an active custom entry implies a live edit, its rect, and an attached container */
+    /* v8 ignore start -- an active custom entry implies a live edit, its rect, and an attached container */
     if (edit === null || editRect === null || container === null) {
       return;
     }
+    /* v8 ignore stop */
     const instance = customEntry.factory({
       value: edit.draft,
       rect: editRect,
@@ -2340,7 +2354,7 @@ const LatticaGridImpl = forwardRef<LatticaGridHandle, LatticaGridProps>(function
 export const LatticaGrid = LatticaGridImpl;
 
 async function writeClipboard(matrix: string[][]): Promise<void> {
-  /* v8 ignore next 8 -- exercised only with a real async Clipboard API */
+  /* v8 ignore start -- exercised only with a real async Clipboard API */
   const text = matrix.map((row) => row.join('\t')).join('\n');
   try {
     if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
@@ -2349,10 +2363,11 @@ async function writeClipboard(matrix: string[][]): Promise<void> {
   } catch {
     // Clipboard access denied; ignore.
   }
+  /* v8 ignore stop */
 }
 
 async function readClipboardInto(controller: GridController): Promise<void> {
-  /* v8 ignore next 10 -- exercised only with a real async Clipboard API */
+  /* v8 ignore start -- exercised only with a real async Clipboard API */
   try {
     if (typeof navigator !== 'undefined' && navigator.clipboard?.readText) {
       const text = await navigator.clipboard.readText();
@@ -2363,3 +2378,4 @@ async function readClipboardInto(controller: GridController): Promise<void> {
     // Clipboard access denied; ignore.
   }
 }
+  /* v8 ignore stop */

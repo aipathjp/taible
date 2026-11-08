@@ -35,8 +35,9 @@ function fullwidthDigitsToAscii(input: string): string {
   let out = '';
   for (const ch of input) {
     // Iterating a string yields whole code points, so codePointAt(0) is defined.
-    /* v8 ignore next -- ?? 0 fallback is unreachable for an iterated character */
+    /* v8 ignore start -- ?? 0 fallback is unreachable for an iterated character */
     const code = ch.codePointAt(0) ?? 0;
+    /* v8 ignore stop */
     if (code >= 0xff10 && code <= 0xff19) {
       out += String.fromCodePoint(code - FULLWIDTH_DIGIT_OFFSET);
     } else {
@@ -52,10 +53,11 @@ function fullwidthDigitsToAscii(input: string): string {
  * reject explicitly to avoid treating blanks as numeric.
  */
 function isNumericString(s: string): boolean {
-  /* v8 ignore next 3 -- callers guard against empty strings before calling */
+  /* v8 ignore start -- callers guard against empty strings before calling */
   if (s.length === 0) {
     return false;
   }
+  /* v8 ignore stop */
   const n = Number(s);
   return Number.isFinite(n);
 }
@@ -117,10 +119,11 @@ export function inferCellType(value: unknown): InferredType {
     if (match) {
       // Capture groups are guaranteed present when the regex matches.
       const [, year, month, day] = match;
-      /* v8 ignore next 3 -- year/month/day are always captured on a regex match */
+      /* v8 ignore start -- year/month/day are always captured on a regex match */
       if (year === undefined || month === undefined || day === undefined) {
         return 'string';
       }
+      /* v8 ignore stop */
       if (canonicalizeDate(year, month, day) !== undefined) {
         return 'date';
       }
@@ -208,10 +211,11 @@ export function normalizeValue(value: unknown, type: InferredType): unknown {
     const match = DATE_RE.exec(trimmed);
     if (match) {
       const [, year, month, day] = match;
-      /* v8 ignore next 3 -- year/month/day are always captured on a regex match */
+      /* v8 ignore start -- year/month/day are always captured on a regex match */
       if (year === undefined || month === undefined || day === undefined) {
         return trimmed;
       }
+      /* v8 ignore stop */
       const canon = canonicalizeDate(year, month, day);
       return canon ?? trimmed;
     }
@@ -249,8 +253,9 @@ function jaccard(a: Set<string>, b: Set<string>): number {
   }
   const union = a.size + b.size - intersection;
   // union === 0 only when both sets are empty, already handled above.
-  /* v8 ignore next -- union === 0 branch is unreachable after the empty-set guard */
+  /* v8 ignore start -- union === 0 branch is unreachable after the empty-set guard */
   return union === 0 ? 1 : intersection / union;
+  /* v8 ignore stop */
 }
 
 /**
@@ -312,10 +317,11 @@ export function detectDuplicateRows(
     for (let j = i + 1; j < rows.length; j++) {
       const a = signatures[i];
       const b = signatures[j];
-      /* v8 ignore next 3 -- indices i,j are always in range of signatures */
+      /* v8 ignore start -- indices i,j are always in range of signatures */
       if (a === undefined || b === undefined) {
         continue;
       }
+      /* v8 ignore stop */
       if (jaccard(a, b) >= threshold) {
         union(i, j);
       }

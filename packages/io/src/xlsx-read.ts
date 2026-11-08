@@ -263,15 +263,17 @@ function parseWorksheet(xml: string, shared: string[]): (string | number | boole
     const attrs = m[1]!;
     const openTag = `<c${attrs}>`;
     const ref = getAttr(openTag, 'r');
-    /* v8 ignore next 3 -- writer always emits r=; defensive for foreign files */
+    /* v8 ignore start -- writer always emits r=; defensive for foreign files */
     if (ref === undefined) {
       continue;
     }
+    /* v8 ignore stop */
     const cellMatch = /^([A-Za-z]+)(\d+)$/.exec(ref);
-    /* v8 ignore next 3 -- malformed reference; defensive for foreign files */
+    /* v8 ignore start -- malformed reference; defensive for foreign files */
     if (cellMatch === null) {
       continue;
     }
+    /* v8 ignore stop */
     const col = columnLabelToIndex(cellMatch[1]!);
     const row = Number(cellMatch[2]!) - 1;
     const body = m[3] ?? '';
